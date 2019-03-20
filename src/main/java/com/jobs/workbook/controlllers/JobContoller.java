@@ -55,7 +55,9 @@ public class JobContoller {
         if (location != null) {
             geoLocationRepository.save(location);
         }
-
+        if (newJobRecord.getClientTime() == null) {
+            newJobRecord.setClientTime(System.currentTimeMillis());
+        }
         return new ResponseEntity<>(jobRepository.save(newJobRecord), HttpStatus.CREATED);
     }
 

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+
 @RestController
 public class UserContoller {
 
@@ -44,6 +46,9 @@ public class UserContoller {
         if (userFromDb == null) {
             String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
             userRequest.setPassword(encodedPassword);
+            if (userRequest.getClientTime() == null) {
+                userRequest.setClientTime(System.currentTimeMillis());
+            }
             this.userRepository.save(userRequest);
             return new ResponseEntity<>(userRequest, HttpStatus.CREATED);
         } else {

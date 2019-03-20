@@ -24,6 +24,7 @@ public class Job {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonSetter("customer")
     @JsonIgnore
+    @NotNull
     private Customer customer;
 
     @Column(name = "description",columnDefinition="LONGTEXT" )
@@ -46,10 +47,10 @@ public class Job {
     private User user;
 
     @JoinColumn(name = "client_time")
-    private long clientTime;
+    private Long clientTime;
 
     public Job() {
-        this.clientTime = System.currentTimeMillis();
+
     }
 
     public Job(Customer customer, String description, GeoLocation location, long value, User user) {
@@ -58,7 +59,6 @@ public class Job {
         this.location = location;
         this.value = value;
         this.user = user;
-        this.clientTime = System.currentTimeMillis();
     }
 
     public long getId() {
@@ -109,4 +109,11 @@ public class Job {
         this.user = user;
     }
 
+    public Long getClientTime() {
+        return clientTime;
+    }
+
+    public void setClientTime(Long clientTime) {
+        this.clientTime = clientTime;
+    }
 }

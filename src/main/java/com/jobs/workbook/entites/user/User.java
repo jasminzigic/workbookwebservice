@@ -48,17 +48,15 @@ public class User {
     private List<Customer> customerList = new ArrayList<>();
 
     @JoinColumn(name = "client_time")
-    private long clientTime;
+    private Long clientTime;
 
       public User() {
-          this.clientTime = System.currentTimeMillis();
       }
 
-    public User(String name, @Email String email, @Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$") String phone) {
+    public User(String name, @Email String email, @NotNull String password) {
         this.name = name;
         this.email = email;
-        this.phone = phone;
-        this.clientTime = System.currentTimeMillis();
+        this.password = password;
     }
 
     public long getId() {
@@ -101,6 +99,13 @@ public class User {
         this.password = password;
     }
 
+    public Long getClientTime() {
+        return clientTime;
+    }
+
+    public void setClientTime(Long clientTime) {
+        this.clientTime = clientTime;
+    }
 
     @Override
     public String toString() {
