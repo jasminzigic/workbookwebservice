@@ -108,12 +108,46 @@ public class User {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (jobList != null ? !jobList.equals(user.jobList) : user.jobList != null) return false;
+        if (customerList != null ? !customerList.equals(user.customerList) : user.customerList != null) return false;
+        return clientTime != null ? clientTime.equals(user.clientTime) : user.clientTime == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (jobList != null ? jobList.hashCode() : 0);
+        result = 31 * result + (customerList != null ? customerList.hashCode() : 0);
+        result = 31 * result + (clientTime != null ? clientTime.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", jobList=" + jobList +
+                ", customerList=" + customerList +
+                ", clientTime=" + clientTime +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.jobs.workbook.entites.job;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.jobs.workbook.entites.Customer.Customer;
 import com.jobs.workbook.entites.location.GeoLocation;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 public class Job {
@@ -23,14 +25,14 @@ public class Job {
     @JoinColumn(name = "customer_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonSetter("customer")
-    @JsonIgnore
     @NotNull
+    @JsonIgnore
     private Customer customer;
 
     @Column(name = "description",columnDefinition="LONGTEXT" )
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "location_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonSetter("location")
@@ -51,6 +53,16 @@ public class Job {
 
     public Job() {
 
+    }
+
+    public Job(long id, @NotNull Customer customer, String description, GeoLocation location, @NotNull long value, User user, Long clientTime) {
+        this.id = id;
+        this.customer = customer;
+        this.description = description;
+        this.location = location;
+        this.value = value;
+        this.user = user;
+        this.clientTime = clientTime;
     }
 
     public Job(Customer customer, String description, GeoLocation location, long value, User user) {
@@ -116,4 +128,13 @@ public class Job {
     public void setClientTime(Long clientTime) {
         this.clientTime = clientTime;
     }
+
+    public String getCustomerName() {
+        return this.customer.getName();
+    }
+
+    public Date getDate() {
+        return new Date(this.clientTime);
+    }
+
 }

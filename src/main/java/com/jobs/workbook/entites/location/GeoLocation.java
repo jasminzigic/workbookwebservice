@@ -16,38 +16,50 @@ public class GeoLocation {
     private long id;
 
     @NotNull
-    private long longitude;
+    private Float longitude;
 
     @NotNull
-    private long latitude;
+    private Float latitude;
 
     private String address;
 
-    @OneToMany(mappedBy = "location")
+    @OneToOne(mappedBy = "location")
     @JsonIgnore
-    private List<Job> jobList = new ArrayList<>();
+    private Job job;
 
     public GeoLocation() {
     }
 
-    public GeoLocation(long longitude, long latitude) {
+    public long getId() {
+        return id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public GeoLocation(Float longitude, Float latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-    public long getLongitude() {
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Float getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(Float longitude) {
         this.longitude = longitude;
     }
 
-    public long getLatitude() {
+    public Float getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(Float latitude) {
         this.latitude = latitude;
     }
 }

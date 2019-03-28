@@ -4,6 +4,9 @@ public class UserSingupResponse {
     private boolean success;
     private String description;
 
+    public UserSingupResponse() {
+    }
+
     public UserSingupResponse(boolean success, String description) {
         this.success = success;
         this.description = description;
@@ -24,4 +27,6 @@ public class UserSingupResponse {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

@@ -17,6 +17,7 @@ import java.util.List;
 import static java.lang.System.currentTimeMillis;
 
 @RestController
+@CrossOrigin
 public class UserContoller {
 
     @Bean

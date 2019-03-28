@@ -1,9 +1,11 @@
 package com.jobs.workbook.entites.Customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.jobs.workbook.entites.job.Job;
 import com.jobs.workbook.entites.user.User;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -25,10 +27,9 @@ public class Customer {
     private String email;
 
     @Pattern(regexp="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")
-    @JsonSetter("phoneNumber")
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
@@ -37,9 +38,7 @@ public class Customer {
     @JoinColumn(name = "client_time")
     private long clientTime;
 
-    @OneToMany(
-            mappedBy = "customer"
-    )
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", orphanRemoval=true)
     @JsonIgnore
     private List<Job> jobList = new ArrayList<>();
 
@@ -99,5 +98,23 @@ public class Customer {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 '}';
+    }
+
+    public long getClientTime() {
+        return clientTime;
+    }
+
+    public void setClientTime(long clientTime) {
+        this.clientTime = clientTime;
+    }
+
+    @JsonInclude
+    public double getValue() {
+        return this.jobList.stream().mapToDouble(Job::getValue).sum();
+    }
+
+    @JsonInclude
+    public Number getJobLength() {
+        return this.jobList.size();
     }
 }
