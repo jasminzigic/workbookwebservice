@@ -37,6 +37,11 @@ public class UserContoller {
         return userRepository.findAll();
     }
 
+    @GetMapping("/user/detail")
+    public User getUserDetail(@RequestParam(required = true, name = "email") String email ) {
+        return userRepository.findOneByEmail(email);
+    }
+
     @PostMapping("/user/register")
     public ResponseEntity<Object> createAccount(@Valid @RequestBody User userRequest) throws Exception {
 

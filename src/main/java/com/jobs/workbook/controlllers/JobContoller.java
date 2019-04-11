@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,16 +31,16 @@ public class JobContoller {
     @Autowired
     GeoLocationRepository geoLocationRepository;
 
-    @GetMapping("/jobs/{userId}")
-    public List<Job> getAllJobs(@PathVariable long userId, @RequestParam(required = false, name = "customerId") Long customerId){
+    @GetMapping("/jpa/jobs")
+    public List<Job> getAllJobs(@RequestParam(required = false, name = "customerId") Long customerId, Principal principal){
         if (customerId != null) {
-            return jobRepository.findAllByUserIdAndCustomerId(userId, customerId);
+            return jobRepository.findAllByUserEmailAndCustomerId(principal.getName(), customerId);
         } else {
-            return jobRepository.findAllByUserId(userId);
+            return jobRepository.findAllByUserEmail(principal.getName());
         }
     }
 
-    @DeleteMapping("/jobs/delete/{id}")
+    @DeleteMapping("/jpa/jobs/delete/{id}")
     public ResponseEntity<DeleteResponse> deleteJobRecord(@PathVariable long id) {
         Optional<Job> jobToDelete = jobRepository.findById(id);
         DeleteResponse deleteResponse;
@@ -51,7 +53,7 @@ public class JobContoller {
         return new ResponseEntity<DeleteResponse>(deleteResponse, HttpStatus.ALREADY_REPORTED);
     }
 
-    @PutMapping("/jobs/update")
+    @PutMapping("/jpa/jobs/update")
     public ResponseEntity<Object> updateJob(@RequestBody Job jobToUpdate) {
         Job job =jobRepository.findById(jobToUpdate.getId()).get();
         if (job != null) {
@@ -67,10 +69,10 @@ public class JobContoller {
 
     }
 
-    @PostMapping("/job/register")
-    public ResponseEntity<Object> addJob(@Valid @RequestBody Job newJobRecord) throws Exception {
+    @PostMapping("/jpa/job/register")
+    public ResponseEntity<Object> addJob(@Valid @RequestBody Job newJobRecord, Principal principal) throws Exception {
 
-        User loggedUser = userRepository.findOneByEmail("zigic.jasmin@gmail.com");
+        User loggedUser = userRepository.findOneByEmail(principal.getName());
 
         newJobRecord.setUser(loggedUser);
 
