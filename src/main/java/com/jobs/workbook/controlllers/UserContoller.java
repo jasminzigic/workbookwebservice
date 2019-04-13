@@ -37,6 +37,11 @@ public class UserContoller {
         return userRepository.findAll();
     }
 
+    @GetMapping("/user/detail")
+    public User getUserDetail(@RequestParam(required = true, name = "email") String email ) {
+        return userRepository.findOneByEmail(email);
+    }
+
     @PostMapping("/user/register")
     public ResponseEntity<Object> createAccount(@Valid @RequestBody User userRequest) throws Exception {
 
@@ -69,9 +74,9 @@ public class UserContoller {
 
     }
 
-    @PutMapping("/user/update/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable long id, @Valid @RequestBody User user) throws  Exception {
-        User userFromDb = userRepository.findOneById(id);
+    @PutMapping("/user/update")
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) throws  Exception {
+        User userFromDb = userRepository.findOneById(user.getId());
         if (userFromDb != null) {
             userFromDb.setEmail(user.getEmail());
             userFromDb.setName(user.getName());

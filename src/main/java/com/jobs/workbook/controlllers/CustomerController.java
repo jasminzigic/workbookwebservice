@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,14 +23,15 @@ public class CustomerController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/customer/{userId}")
-    public List<Customer> getAllCustomers(@PathVariable long userId) {
-        return customerRepository.findAllByOwnerIdOrderByNameAsc(userId);
+    @GetMapping("/jpa/customers")
+    public List<Customer> getAllCustomers(Principal principal) {
+    	 User loggedUser = userRepository.findOneByEmail(principal.getName());
+        return customerRepository.findAllByOwnerEmailOrderByNameAsc(loggedUser.getEmail());
     }
 
-    @PostMapping("customer/register")
-    public ResponseEntity registerCustomer(@RequestBody Customer customer) {
-        User loggedUser = userRepository.findOneByEmail("zigic.jasmin@gmail.com");
+    @PostMapping("/jpa/customer/register")
+    public ResponseEntity registerCustomer(@RequestBody Customer customer,  Principal principal) {
+    	User loggedUser = userRepository.findOneByEmail(principal.getName());
         Customer customerFromDb = customerRepository.findOneByNameAndOwnerId(customer.getName(), loggedUser.getId());
         if (customerFromDb != null) {
             return new ResponseEntity(customerFromDb, HttpStatus.ALREADY_REPORTED);
@@ -40,7 +42,7 @@ public class CustomerController {
 
     }
 
-    @DeleteMapping("customer/delete/{customerId}")
+    @DeleteMapping("/jpa/customer/delete/{customerId}")
     public ResponseEntity<DeleteResponse> deleteCustomer(@PathVariable long customerId) throws Exception {
         Customer customerFromDb = customerRepository.findOneById(customerId);
         DeleteResponse deleteResponse;
@@ -54,7 +56,7 @@ public class CustomerController {
         }
     }
 
-    @PutMapping("customer/update/")
+    @PutMapping("/jpa/customer/update/")
     public ResponseEntity updateCustomer(@RequestBody Customer customer) {
         Customer customerFromDb = customerRepository.findOneById(customer.getId());
         System.out.print(customer);

@@ -15,7 +15,7 @@ public class LocationController {
     private GeoLocationRepository geoLocationRepository;
 
 
-    @PutMapping("/location/update")
+    @PutMapping("/jpa/location/update")
     public ResponseEntity<Object> updateLocation(@RequestBody GeoLocation locationToUpdate) {
         GeoLocation location = geoLocationRepository.findOneById(locationToUpdate.getId());
         if (location != null) {
@@ -29,7 +29,7 @@ public class LocationController {
         return new ResponseEntity<>(locationToUpdate, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @PostMapping("/location/register")
+    @PostMapping("/jpa/location/register")
     public ResponseEntity<GeoLocation> addLocation(@RequestBody GeoLocation location) {
         System.out.print(location);
         return new ResponseEntity<>(this.geoLocationRepository.save(location), HttpStatus.CREATED);

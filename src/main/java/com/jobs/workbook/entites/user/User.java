@@ -35,7 +35,7 @@ public class User {
 
     @OneToMany(
             mappedBy = "user",
-            cascade = CascadeType.MERGE
+            fetch = FetchType.EAGER
     )
     @JsonIgnore
     private List<Job> jobList = new ArrayList<>();
@@ -149,5 +149,9 @@ public class User {
                 ", customerList=" + customerList +
                 ", clientTime=" + clientTime +
                 '}';
+    }
+
+    public double getTotalValue() {
+        return  this.jobList.stream().mapToDouble(Job::getValue).sum();
     }
 }
