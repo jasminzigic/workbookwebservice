@@ -9,8 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class User {
@@ -151,7 +151,48 @@ public class User {
                 '}';
     }
 
+    public Number getNumberOfJobs() {
+          return this.jobList.size();
+    }
+
     public double getTotalValue() {
         return  this.jobList.stream().mapToDouble(Job::getValue).sum();
     }
+
+    public ArrayList<AnnualEarnings> getAnnualEarnings() {
+        ArrayList<AnnualEarnings> rval = new ArrayList<>();
+        jobList.forEach(job -> {
+            AnnualEarnings yearly;
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(job.getDate());
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            boolean emptyNewYear = rval.stream()
+                    .filter(a -> Objects.equals(a.year, year))
+                    .collect(Collectors.toList()).isEmpty();
+            if (emptyNewYear) {
+                yearly = new AnnualEarnings(year, job.getValue());
+                rval.add(yearly);
+
+            } else {
+                yearly = rval.stream()
+                        .filter(a -> Objects.equals(a.year, year))
+                        .collect(Collectors.toList()).get(0);
+                yearly.setValue(yearly.getValue() + job.getValue());
+                yearly.incrementCount();
+
+            }
+
+            List<MonthlyEarnings> existingMonths = yearly.getMonthlyEarnings().stream()
+                    .filter(a -> Objects.equals(a.getId(), month))
+                    .collect(Collectors.toList());
+
+            existingMonths.get(0).setValue(existingMonths.get(0).getValue() + job.getValue());
+            existingMonths.get(0).incrementCount();
+        });
+        Collections.sort(rval);
+        return rval;
+
+    }
+
 }
