@@ -29,7 +29,7 @@ public class Customer {
     @Pattern(regexp="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")
     private String phone;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
@@ -38,7 +38,7 @@ public class Customer {
     @JoinColumn(name = "client_time")
     private long clientTime;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", orphanRemoval=true)
+    @OneToMany(mappedBy = "customer", orphanRemoval=true)
     @JsonIgnore
     private List<Job> jobList = new ArrayList<>();
 

@@ -21,7 +21,7 @@ public class Job {
     @Column(name = "id")
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonSetter("customer")
@@ -32,7 +32,7 @@ public class Job {
     @Column(name = "description",columnDefinition="LONGTEXT" )
     private String description;
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY,  orphanRemoval = true)
     @JoinColumn(name = "location_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonSetter("location")
@@ -42,7 +42,7 @@ public class Job {
     @NotNull
     private long value;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

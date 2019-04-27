@@ -34,15 +34,13 @@ public class User {
     private String password;
 
     @OneToMany(
-            mappedBy = "user",
-            fetch = FetchType.EAGER
+            mappedBy = "user"
     )
     @JsonIgnore
     private List<Job> jobList = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "owner",
-            cascade = CascadeType.MERGE
+            mappedBy = "owner"
     )
     @JsonIgnore
     private List<Customer> customerList = new ArrayList<>();
