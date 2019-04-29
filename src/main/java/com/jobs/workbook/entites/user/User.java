@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.jobs.workbook.entites.Customer.Customer;
 import com.jobs.workbook.entites.job.Job;
+import com.jobs.workbook.entites.settings.Settings;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -47,6 +48,10 @@ public class User {
 
     @JoinColumn(name = "client_time")
     private Long clientTime;
+
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "settings_id")
+    Settings settings;
 
       public User() {
       }
@@ -155,6 +160,14 @@ public class User {
 
     public double getTotalValue() {
         return  this.jobList.stream().mapToDouble(Job::getValue).sum();
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Settings settings) {
+            this.settings = settings;
     }
 
     public ArrayList<AnnualEarnings> getAnnualEarnings() {

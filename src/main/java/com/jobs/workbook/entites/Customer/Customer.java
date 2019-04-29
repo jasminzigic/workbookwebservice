@@ -30,7 +30,7 @@ public class Customer {
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User owner;

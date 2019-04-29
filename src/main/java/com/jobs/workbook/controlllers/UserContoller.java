@@ -2,6 +2,7 @@ package com.jobs.workbook.controlllers;
 
 import com.jobs.workbook.entites.user.User;
 import com.jobs.workbook.entites.user.UserSingupResponse;
+import com.jobs.workbook.repositories.SettingsRepository;
 import com.jobs.workbook.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -30,6 +32,9 @@ public class UserContoller {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SettingsRepository settingsRepository;
 
 
     @GetMapping("/users")
@@ -55,6 +60,7 @@ public class UserContoller {
             if (userRequest.getClientTime() == null) {
                 userRequest.setClientTime(System.currentTimeMillis());
             }
+            userRequest.setSettings(settingsRepository.save(userRequest.getSettings()));
             this.userRepository.save(userRequest);
             return new ResponseEntity<>(userRequest, HttpStatus.CREATED);
         } else {
@@ -75,18 +81,14 @@ public class UserContoller {
     }
 
     @PutMapping("/user/update")
+    @Transactional
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) throws  Exception {
         User userFromDb = userRepository.findOneById(user.getId());
         if (userFromDb != null) {
-            userFromDb.setEmail(user.getEmail());
-            userFromDb.setName(user.getName());
-            userFromDb.setPhone(user.getPhone());
-            userFromDb.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(userFromDb);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return new ResponseEntity<>( userRepository.save(user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(userFromDb, HttpStatus.OK);
-
     }
 }
