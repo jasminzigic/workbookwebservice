@@ -85,6 +85,7 @@ public class UserContoller {
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) throws  Exception {
         User userFromDb = userRepository.findOneById(user.getId());
         if (userFromDb != null) {
+            user.setSettings(settingsRepository.save(user.getSettings()));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return new ResponseEntity<>( userRepository.save(user), HttpStatus.OK);
         } else {
