@@ -31,7 +31,6 @@ public class LocationController {
 
     @PostMapping("/jpa/location/register")
     public ResponseEntity<GeoLocation> addLocation(@RequestBody GeoLocation location) {
-        System.out.print(location);
         return new ResponseEntity<>(this.geoLocationRepository.save(location), HttpStatus.CREATED);
     }
 }
