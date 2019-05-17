@@ -15,7 +15,6 @@ public class Settings {
     @JsonIgnore
     User user;
 
-
     String country;
 
     String currencyCode;
