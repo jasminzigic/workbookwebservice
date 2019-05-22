@@ -59,7 +59,15 @@ public class JobImage {
         this.job = job;
     }
 
-    public String getExtUrl() {
-        return this.url;
+    public Long getJobId() {
+        return this.job.getId();
+    }
+
+    public String getTitle() {
+        return this.job.getCustomer().getName();
+    }
+
+    public long getCustomerId() {
+        return this.job.getCustomer().getId();
     }
 }
