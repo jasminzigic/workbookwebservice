@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.jobs.workbook.entites.Customer.Customer;
+import com.jobs.workbook.entites.jobImage.JobImage;
 import com.jobs.workbook.entites.location.GeoLocation;
 import com.jobs.workbook.entites.user.User;
 import org.hibernate.annotations.OnDelete;
@@ -11,7 +12,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Job {
@@ -51,6 +54,9 @@ public class Job {
     @JoinColumn(name = "client_time")
     private Long clientTime;
 
+    @OneToMany(mappedBy = "job", orphanRemoval=true)
+    private List<JobImage> images = new ArrayList<>();
+
     public Job() {
 
     }
@@ -63,6 +69,17 @@ public class Job {
         this.value = value;
         this.user = user;
         this.clientTime = clientTime;
+    }
+
+    public Job(long id, @NotNull Customer customer, String description, GeoLocation location, @NotNull long value, User user, Long clientTime, List<JobImage> images) {
+        this.id = id;
+        this.customer = customer;
+        this.description = description;
+        this.location = location;
+        this.value = value;
+        this.user = user;
+        this.clientTime = clientTime;
+        this.images = images;
     }
 
     public Job(Customer customer, String description, GeoLocation location, long value, User user) {
@@ -137,4 +154,11 @@ public class Job {
         return new Date(this.clientTime);
     }
 
+    public List<JobImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<JobImage> images) {
+        this.images = images;
+    }
 }
